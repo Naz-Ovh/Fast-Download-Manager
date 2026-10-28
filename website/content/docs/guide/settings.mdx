@@ -1,0 +1,69 @@
+---
+title: Settings
+description: Connections, categories and folders, language, theme and the other settings that exist today.
+---
+
+Settings are saved automatically and kept between runs. Most of them change from the menus today; the full
+Options window is coming soon.
+
+<Callout title="Options window coming soon">
+  One window for every setting: browser integration and file types, connections, folders and categories,
+  proxy, sounds and the video button. Until it arrives, the settings below keep their defaults or change from
+  the menus.
+</Callout>
+
+## Connections
+
+Each download uses up to **8 connections** by default. The engine supports up to **32**. Today you choose the
+number per download only with the [command line](/docs/guide/cli/) (`fdm get <url> <dir> 16`).
+
+## Categories and default folders
+
+Downloads are sorted into **Compressed**, **Documents**, **Music**, **Programs**, **Video** and **General** by
+file extension, and each category has its own folder. Unknown types go to **General**. You can change the folder
+and name of a single download in the **Download File Info** window before it starts, and tick **Remember this
+path**.
+
+## Language
+
+The app speaks **39 languages**. **View → Language** lists **System language** first, then every language by
+its own name. A choice applies at once.
+
+- **First start:** your system's language when the app has it, otherwise English.
+- **Right to left:** in Arabic, Persian and Hebrew the window is mirrored. Menus open from the right, the tool
+  bar and columns run right to left, and the category tree moves to the right.
+
+The browser extension follows the browser's language on its own; see
+[Browser extension](/docs/guide/browser-extension/#languages).
+
+## Theme
+
+The app is light or dark: it turns dark when **View → Dark mode support** is ticked **and** your system uses a
+dark theme.
+
+## Window and list
+
+These are saved as you change them:
+
+| setting | where |
+| --- | --- |
+| Visible columns and their order | **View → Customize list columns…** |
+| Sort order | a column header, or **View → Arrange files** |
+| Large or small tool bar buttons | **View → Toolbar** |
+| Show or hide the category tree | **View → Hide categories** |
+| Double click opens the file or its Properties | right-click menu → **On double click** |
+| Show the Download complete window | its **Don't show this dialog again** box |
+| Speed limiter on or off | **Downloads → Speed limiter** |
+
+## Where settings are stored
+
+Settings and the download list are JSON files in your user data folder:
+
+| system | folder |
+| --- | --- |
+| Windows | `%APPDATA%\FastDownloadManager` |
+| Linux | `~/.local/share/FastDownloadManager` |
+| macOS | `~/Library/Application Support/FastDownloadManager` |
+
+Uninstalling with the coming Windows installer keeps this folder, so a later install picks up your list and
+settings.

@@ -1,0 +1,113 @@
+---
+title: Install
+description: Windows is supported today. The installer is coming soon; until then, build the app from source.
+---
+
+Fast Download Manager runs on Windows (x64) today. The code is cross-platform, and Linux and macOS builds are
+on the way.
+
+## Windows
+
+<Callout title="Installer coming soon">
+  One `.msi` setup file will hold the whole product: the app, the browser link, the `fdm` command line and the
+  browser extension. Nothing is downloaded during setup. Until it is published, [build from
+  source](#build-from-source).
+</Callout>
+
+What the installer will do:
+
+- **Choose who gets it.** **Just me** installs for your account without administrator rights. **Everyone on
+  this computer** installs for all users and asks for administrator rights.
+- **Start with Windows.** On by default, so the app waits in the tray after you sign in. You can turn it off
+  in the app's settings.
+- **Connect your browsers.** The browser link is registered for Chrome, Edge, Brave and Firefox. The last setup
+  page shows the extension folder to load. See [Browser extension](/docs/guide/browser-extension/).
+- **Update in place.** Running a newer setup closes the app, replaces it and starts it again.
+
+## Linux and macOS
+
+<Callout title="Coming soon">
+  Linux packages (`.deb`, `.rpm`, `.pacman`, AppImage and a one-line install command) and a macOS `.dmg` are
+  planned. The engine, the app and the extension are written to run on all three systems.
+</Callout>
+
+## Build from source
+
+You need [Rust](https://rustup.rs), [Node.js](https://nodejs.org) 22 or newer and
+[just](https://github.com/casey/just). On Windows, `just` uses PowerShell 7.
+
+<Steps>
+<Step>
+
+### Get the tools
+
+<Tabs items={['Windows', 'Linux', 'macOS']}>
+<Tab value="Windows">
+
+```powershell
+winget install Rustlang.Rustup OpenJS.NodeJS.LTS Casey.Just Microsoft.PowerShell
+```
+
+</Tab>
+<Tab value="Linux">
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# Node.js 22+ and just from your distribution, for example:
+sudo apt install nodejs npm just
+```
+
+</Tab>
+<Tab value="macOS">
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+brew install node just
+```
+
+</Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+### Install the extension's packages
+
+Run this once in the repository folder, and again after the extension's `package.json` changes.
+
+```bash
+just ext-install
+```
+
+</Step>
+<Step>
+
+### Build and start
+
+```bash
+just run
+```
+
+This builds the app, the browser link, the command line and the extension, then opens the app. Run `just` to
+list every other command. `just run-release` makes an optimized build.
+
+</Step>
+<Step>
+
+### Load the extension
+
+Load `extension/dist/chromium` (Chrome, Edge, Brave) or `extension/dist/firefox/manifest.json` (Firefox) once,
+as described in
+[Browser extension](/docs/guide/browser-extension/#load-the-extension).
+
+</Step>
+</Steps>
+
+<Callout type="warn" title="Linux and macOS builds">
+  Building on Linux and macOS is not tested yet. The tray icon is Windows-only today: elsewhere, closing the
+  window quits the app.
+</Callout>
+
+On Windows you can also build the installer yourself: `just package` writes
+`target/package/FastDownloadManager-<version>-x64.msi`, and `just install` builds it and installs it for your
+account.

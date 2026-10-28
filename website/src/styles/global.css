@@ -1,0 +1,570 @@
+/* Fast Download Manager website: design system.
+ * Shared by every area. Change tokens here, not in an area's own CSS.
+ * Sections: 1 imports · 2 raw brand tokens · 3 Fumadocs colors (light/dark) · 4 fonts and type ·
+ *           5 base · 6 components (button, card, badge, copy, eyebrow) · 7 backgrounds ·
+ *           8 motion (keyframes, reveal, route line) · 9 reduced motion */
+
+/* ── 1. Imports ─────────────────────────────────────────────────────────────────────────────
+ * Tailwind v4 + the Fumadocs preset (layout styles only). No Fumadocs color preset: our colors are
+ * section 3. */
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/preset.css';
+
+/* ── 2. Raw brand tokens ─────────────────────────────────────────────────────────────────────
+ * Exact values from assets/brand/icon.svg. Available as CSS variables (var(--fdm-mint-500)) and as
+ * Tailwind colors (bg-fdm-mint-500, text-fdm-ink, ...). */
+@theme {
+  --color-fdm-ink: #0d1b1e;
+  --color-fdm-mint-300: #7cf5c6;
+  --color-fdm-mint-400: #45e0b0;
+  --color-fdm-mint-500: #20c997;
+  --color-fdm-mint-600: #12b886;
+  --color-fdm-mint-700: #0ca678;
+  --color-fdm-mint-800: #099268;
+  --color-fdm-mint-900: #087f5b;
+
+  /* Shape */
+  --radius-fdm-card: 16px;
+  --radius-fdm-panel: 12px;
+  --radius-fdm-control: 8px;
+
+  /* Motion: short and decisive */
+  --ease-fdm: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Theme-aware brand colors (values switch in section 3): bg-fdm-surface-2, text-fdm-primary-text, ... */
+@theme inline {
+  --color-fdm-surface: var(--fdm-surface);
+  --color-fdm-surface-2: var(--fdm-surface-2);
+  --color-fdm-border-strong: var(--fdm-border-strong);
+  --color-fdm-primary-text: var(--fdm-primary-text);
+  --color-fdm-glow: var(--fdm-glow);
+  --color-fdm-tint: var(--fdm-tint);
+}
+
+:root {
+  --fdm-ink: #0d1b1e;
+  --fdm-mint-300: #7cf5c6;
+  --fdm-mint-400: #45e0b0;
+  --fdm-mint-500: #20c997;
+  --fdm-mint-600: #12b886;
+  --fdm-mint-700: #0ca678;
+  --fdm-mint-800: #099268;
+  --fdm-mint-900: #087f5b;
+
+  --fdm-radius-card: 16px;
+  --fdm-radius-panel: 12px;
+  --fdm-radius-control: 8px;
+  --fdm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --fdm-dur-fast: 120ms; /* hover, press */
+  --fdm-dur-reveal: 220ms; /* reveal on scroll (brief: 180-240 ms) */
+  --fdm-stagger-step: 40ms;
+  --fdm-ring-hover: 0 0 0 1px rgba(32, 201, 151, 0.35), 0 12px 40px -12px rgba(32, 201, 151, 0.35);
+
+  /* Fumadocs home layout and docs layout width */
+  --fd-layout-width: 1400px;
+}
+
+/* ── 3. Fumadocs colors ──────────────────────────────────────────────────────────────────────
+ * Every --color-fd-* variable Fumadocs reads, mapped onto the brand. Light is the default (@theme),
+ * dark overrides under .dark (next-themes sets the class on <html>). */
+@theme {
+  --color-fd-background: #f7fbf9;
+  --color-fd-foreground: #0d1b1e;
+  --color-fd-muted: #eef5f2;
+  --color-fd-muted-foreground: #4e6660;
+  --color-fd-popover: #ffffff;
+  --color-fd-popover-foreground: #0d1b1e;
+  --color-fd-card: #ffffff;
+  --color-fd-card-foreground: #0d1b1e;
+  --color-fd-border: rgba(13, 27, 30, 0.08);
+  --color-fd-primary: #0ca678;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-secondary: #eef5f2;
+  --color-fd-secondary-foreground: #0d1b1e;
+  --color-fd-accent: rgba(32, 201, 151, 0.1);
+  --color-fd-accent-foreground: #087f5b;
+  --color-fd-ring: #0ca678;
+  --color-fd-overlay: rgba(6, 17, 15, 0.35);
+}
+
+/* Status colors the preset needs (callouts, code diffs). Same in both themes, as in Fumadocs' own
+ * presets; success uses the brand mint. */
+@theme static {
+  --color-fd-info: oklch(62.3% 0.214 259.815);
+  --color-fd-warning: oklch(76.9% 0.188 70.08);
+  --color-fd-error: oklch(63.7% 0.237 25.331);
+  --color-fd-success: #12b886;
+  --color-fd-idea: oklch(70.5% 0.209 60.849);
+  --color-fd-diff-remove: rgba(200, 10, 100, 0.12);
+  --color-fd-diff-remove-symbol: rgb(230, 10, 100);
+  --color-fd-diff-add: rgba(32, 201, 151, 0.12);
+  --color-fd-diff-add-symbol: #12b886;
+}
+
+:root {
+  --fdm-surface: #ffffff;
+  --fdm-surface-2: #f1f7f4;
+  --fdm-border-strong: rgba(13, 27, 30, 0.16);
+  /* Mint for small text on light backgrounds (#087F5B, AA on white). #0CA678 is for fills and large text. */
+  --fdm-primary-text: #087f5b;
+  --fdm-primary-hover: #099268;
+  --fdm-glow: #20c997;
+  --fdm-tint: rgba(32, 201, 151, 0.1);
+  --fdm-pattern: rgba(12, 166, 120, 0.06);
+  --fdm-btn-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 2px rgba(13, 27, 30, 0.18);
+}
+
+.dark {
+  --color-fd-background: #0a1416;
+  --color-fd-foreground: #e6f2ee;
+  --color-fd-muted: #13262a;
+  --color-fd-muted-foreground: #8fa8a1;
+  --color-fd-popover: #0f1d20;
+  --color-fd-popover-foreground: #e6f2ee;
+  --color-fd-card: #0f1d20;
+  --color-fd-card-foreground: #e6f2ee;
+  --color-fd-border: rgba(124, 245, 198, 0.1);
+  --color-fd-primary: #20c997;
+  --color-fd-primary-foreground: #06110f;
+  --color-fd-secondary: #13262a;
+  --color-fd-secondary-foreground: #e6f2ee;
+  --color-fd-accent: rgba(32, 201, 151, 0.12);
+  --color-fd-accent-foreground: #7cf5c6;
+  --color-fd-ring: #20c997;
+  --color-fd-overlay: rgba(0, 0, 0, 0.5);
+
+  --fdm-surface: #0f1d20;
+  --fdm-surface-2: #13262a;
+  --fdm-border-strong: rgba(124, 245, 198, 0.2);
+  --fdm-primary-text: #45e0b0;
+  --fdm-primary-hover: #45e0b0;
+  --fdm-glow: #7cf5c6;
+  --fdm-tint: rgba(32, 201, 151, 0.12);
+  --fdm-pattern: rgba(124, 245, 198, 0.05);
+  --fdm-btn-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Fumadocs writes active links and sidebar items in text-fd-primary at small sizes. On light, #0CA678
+ * misses AA for small text, so inside the navbar and the docs chrome primary uses the darker mint. */
+:root:not(.dark) :is(#nd-nav, #nd-sidebar, #nd-toc, #nd-docs-layout, #nd-subnav) {
+  --color-fd-primary: var(--fdm-primary-text);
+}
+
+/* ── 4. Fonts and type ───────────────────────────────────────────────────────────────────────
+ * src/generated/fonts/fonts.css (scripts/prebuild/fonts.mjs, linked in src/routes/__root.tsx) sets
+ * --font-geist-sans / --font-geist-mono on :root; Tailwind's font-sans / font-mono (and the default body
+ * font) point at them. */
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+
+@layer components {
+  /* Headline style: 600, -0.02em, 1.05. Size comes from the caller (text-4xl, .fdm-hero-title). */
+  .fdm-heading {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .fdm-hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  /* Numbers and stats: Geist Mono, tabular figures. */
+  .fdm-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Small mono label above a title. */
+  .fdm-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fdm-primary-text);
+  }
+}
+
+/* ── 5. Base ─────────────────────────────────────────────────────────────────────────────── */
+html {
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+body {
+  background-color: var(--color-fd-background);
+  color: var(--color-fd-foreground);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(32, 201, 151, 0.28);
+}
+
+/* Visible mint focus ring on everything keyboard-focusable. */
+:where(a, button, [role='button'], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: 2px;
+}
+
+/* ── 6. Components ───────────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* Button (src/components/ui/button.tsx) */
+  .fdm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--fdm-radius-control);
+    border: 1px solid transparent;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      transform var(--fdm-dur-fast) var(--fdm-ease),
+      background-color var(--fdm-dur-fast) var(--fdm-ease),
+      border-color var(--fdm-dur-fast) var(--fdm-ease),
+      box-shadow var(--fdm-dur-fast) var(--fdm-ease),
+      color var(--fdm-dur-fast) var(--fdm-ease);
+  }
+  .fdm-btn:active {
+    transform: scale(0.98);
+  }
+  .fdm-btn:disabled,
+  .fdm-btn[aria-disabled='true'] {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .fdm-btn svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+  .fdm-btn-sm {
+    height: 2rem;
+    padding-inline: 0.75rem;
+    font-size: 0.875rem;
+  }
+  .fdm-btn-md {
+    height: 2.5rem;
+    padding-inline: 1rem;
+    font-size: 0.9375rem;
+  }
+  .fdm-btn-lg {
+    height: 3rem;
+    padding-inline: 1.5rem;
+    font-size: 1rem;
+  }
+  .fdm-btn-primary {
+    background-color: var(--color-fd-primary);
+    color: var(--color-fd-primary-foreground);
+    box-shadow: var(--fdm-btn-highlight);
+  }
+  .fdm-btn-primary:hover {
+    background-color: var(--fdm-primary-hover);
+    box-shadow: var(--fdm-btn-highlight), var(--fdm-ring-hover);
+  }
+  .fdm-btn-secondary {
+    background-color: var(--fdm-surface);
+    border-color: var(--fdm-border-strong);
+    color: var(--color-fd-foreground);
+  }
+  .fdm-btn-secondary:hover {
+    border-color: transparent;
+    box-shadow: var(--fdm-ring-hover);
+  }
+  .fdm-btn-ghost {
+    background-color: transparent;
+    color: var(--color-fd-foreground);
+  }
+  .fdm-btn-ghost:hover {
+    background-color: var(--color-fd-accent);
+    color: var(--color-fd-accent-foreground);
+  }
+
+  /* Card (src/components/ui/card.tsx) */
+  .fdm-card {
+    display: block;
+    position: relative;
+    min-width: 0; /* lets long content (code, file names) shrink inside grid and flex parents */
+    background-color: var(--color-fd-card);
+    color: var(--color-fd-card-foreground);
+    border: 1px solid var(--color-fd-border);
+    border-radius: var(--fdm-radius-card);
+  }
+  .fdm-card-interactive {
+    text-decoration: none;
+    transition:
+      transform var(--fdm-dur-fast) var(--fdm-ease),
+      box-shadow var(--fdm-dur-fast) var(--fdm-ease),
+      border-color var(--fdm-dur-fast) var(--fdm-ease);
+  }
+  .fdm-card-interactive:hover,
+  .fdm-card-interactive:focus-visible {
+    transform: translateY(-2px);
+    border-color: transparent;
+    box-shadow: var(--fdm-ring-hover);
+  }
+  /* Panel: 12px radius inner surface, e.g. a code block or a row inside a card. */
+  .fdm-panel {
+    background-color: var(--fdm-surface-2);
+    border: 1px solid var(--color-fd-border);
+    border-radius: var(--fdm-radius-panel);
+  }
+
+  /* Badge (src/components/ui/badge.tsx) */
+  .fdm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 1.5rem;
+    padding-inline: 0.625rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .fdm-badge-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 999px;
+    background-color: currentColor;
+  }
+  .fdm-badge-available {
+    background-color: var(--fdm-tint);
+    border-color: rgba(32, 201, 151, 0.3);
+    color: var(--fdm-primary-text);
+  }
+  .fdm-badge-available .fdm-badge-dot {
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.2);
+  }
+  .fdm-badge-soon {
+    border-color: var(--fdm-border-strong);
+    border-style: dashed;
+    color: var(--color-fd-muted-foreground);
+  }
+  .fdm-badge-neutral {
+    background-color: var(--color-fd-secondary);
+    border-color: var(--color-fd-border);
+    color: var(--color-fd-secondary-foreground);
+  }
+
+  /* Copy button (src/components/ui/copy-button.tsx) */
+  .fdm-copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 2rem;
+    height: 2rem;
+    padding-inline: 0.5rem;
+    border-radius: var(--fdm-radius-control);
+    border: 1px solid var(--color-fd-border);
+    background-color: var(--fdm-surface);
+    color: var(--color-fd-muted-foreground);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      color var(--fdm-dur-fast) var(--fdm-ease),
+      border-color var(--fdm-dur-fast) var(--fdm-ease),
+      transform var(--fdm-dur-fast) var(--fdm-ease);
+  }
+  .fdm-copy:hover {
+    color: var(--color-fd-foreground);
+    border-color: var(--fdm-border-strong);
+  }
+  .fdm-copy:active {
+    transform: scale(0.96);
+  }
+  .fdm-copy.is-copied {
+    color: var(--fdm-primary-text);
+    border-color: rgba(32, 201, 151, 0.35);
+  }
+}
+
+/* ── 7. Backgrounds ──────────────────────────────────────────────────────────────────────────
+ * Utilities, so variants work (md:fdm-bg-dots). Pattern alpha 5-6% mint. */
+@utility fdm-bg-dots {
+  background-image: radial-gradient(var(--fdm-pattern) 1px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+@utility fdm-bg-grid {
+  background-image:
+    linear-gradient(to right, var(--fdm-pattern) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--fdm-pattern) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Soft radial mint glow (put it on an absolutely positioned layer behind the hero). */
+@utility fdm-bg-glow {
+  background-image: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    color-mix(in srgb, var(--fdm-glow) 18%, transparent),
+    transparent 70%
+  );
+}
+
+/* Fades a pattern out towards the edges. */
+@utility fdm-mask-fade {
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 100%);
+}
+
+/* ── 8. Motion ───────────────────────────────────────────────────────────────────────────────
+ * Shared keyframes. Things arrive fast: short durations, var(--fdm-ease), small overshoot. */
+@keyframes fdm-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reduced-motion stand-in for every moving keyframe. */
+@keyframes fdm-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* A number ticking into place (pairs with <CountUp>). */
+@keyframes fdm-count {
+  from {
+    opacity: 0.35;
+    transform: translateY(0.15em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Motion-blur streak: a tall gradient sliver that falls and fades (use on ::before of a falling block). */
+@keyframes fdm-streak {
+  0% {
+    opacity: 0;
+    transform: translateY(-140%) scaleY(1.6);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0.2);
+  }
+}
+
+/* A chunk dropping in from above and landing with a ~3% overshoot. */
+@keyframes fdm-chunk-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-160%);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(3%);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reveal on scroll (src/components/ui/reveal.tsx). The component adds is-pending after hydration, and
+ * only to elements below the viewport, so nothing is hidden before JS runs. Fill mode `backwards`: the
+ * first keyframe holds during the stagger delay, and after the reveal the element lets go of `transform`,
+ * so a revealed card can still lift on hover (`both` would keep `transform: none` and block it). */
+.fdm-reveal.is-pending,
+.fdm-reveal-stagger.is-pending > * {
+  opacity: 0;
+}
+
+.fdm-reveal.is-visible {
+  animation: fdm-reveal var(--fdm-dur-reveal) var(--fdm-ease) backwards;
+  animation-delay: var(--fdm-delay, 0ms);
+}
+
+.fdm-reveal-stagger.is-visible > * {
+  animation: fdm-reveal var(--fdm-dur-reveal) var(--fdm-ease) backwards;
+  animation-delay: calc(var(--fdm-delay, 0ms) + var(--fdm-i, 0) * var(--fdm-stagger, var(--fdm-stagger-step)));
+}
+
+/* Route transfer line (src/components/ui/route-progress.tsx): 0 to 100% in 350 ms, then a 200 ms fade. */
+.fdm-route-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--fdm-mint-500), var(--fdm-mint-300));
+  box-shadow: 0 0 8px rgba(124, 245, 198, 0.55);
+  transform-origin: left center;
+  animation:
+    fdm-route-run 350ms var(--fdm-ease) both,
+    fdm-route-out 200ms var(--fdm-ease) 350ms forwards;
+}
+
+@keyframes fdm-route-run {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fdm-route-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── 9. Reduced motion ───────────────────────────────────────────────────────────────────────
+ * No translation and no streaks: opacity only. Elements that only exist for motion should carry
+ * .fdm-streak (hidden here). <CountUp> shows its final value immediately on its own. */
+@media (prefers-reduced-motion: reduce) {
+  .fdm-reveal.is-visible,
+  .fdm-reveal-stagger.is-visible > * {
+    animation-name: fdm-fade;
+  }
+  .fdm-streak {
+    display: none !important;
+  }
+  /* Route line: full width at once, a short flash of opacity instead of the run. */
+  .fdm-route-progress {
+    animation: fdm-fade 120ms linear both, fdm-route-out 240ms var(--fdm-ease) 200ms forwards;
+  }
+  .fdm-btn,
+  .fdm-card-interactive,
+  .fdm-copy {
+    transition-property: background-color, border-color, box-shadow, color;
+  }
+  .fdm-btn:active,
+  .fdm-copy:active,
+  .fdm-card-interactive:hover,
+  .fdm-card-interactive:focus-visible {
+    transform: none;
+  }
+}

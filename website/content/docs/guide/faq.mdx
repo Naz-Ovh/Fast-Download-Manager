@@ -1,0 +1,58 @@
+---
+title: FAQ
+description: Short answers to common questions about Fast Download Manager.
+---
+
+## Does it work with Brave?
+
+Yes. Brave uses the same extension as Chrome and Edge: load `extension/dist/chromium` in `brave://extensions`.
+See [Browser extension](/docs/guide/browser-extension/).
+
+## Does it need ffmpeg?
+
+No. Video and audio are merged by the app's own code, without re-encoding. There is nothing extra to install.
+
+## Can I resume after a reboot?
+
+Yes, when the server can send parts of a file. The app saves which chunks are done; start the download again and
+it fetches only the rest. Downloads from servers that cannot send parts start over.
+
+## Why 8 connections?
+
+It is the default, a balance between speed and politeness: more connections help when a server sends each one
+slowly, but many servers limit how many connections one visitor may open. The app adds them step by step (1, 2,
+4, 8) and only while all of them receive data. The engine supports up to 32.
+
+## Does it change my browser's download folder?
+
+No. The browser keeps its own settings. Files the app takes are saved in the app's category folders, or wherever
+you pick in the Download File Info window. Downloads the app does not take stay with the browser.
+
+## How do I let the browser download a file instead?
+
+Hold **Alt** while you click the link. Hold **Ctrl** to send any link to the app. You can also turn the
+extension off for one tab in its popup.
+
+## How do I update?
+
+From source: pull the latest code and run `just run`, then press **Reload** on the extension's card. With the
+Windows installer (coming soon), run the newer setup: it closes the app, replaces it and starts it again.
+
+## Is Linux supported?
+
+Not yet. The code is written to run on Windows, Linux and macOS, and Linux packages are planned; see the
+[roadmap](/docs/guide/roadmap/).
+
+## Can it download live streams or protected video?
+
+No. Live streams are not offered, and DRM-protected video cannot be saved. See [Video](/docs/guide/video/).
+
+## Where are my settings and downloads list?
+
+In your user data folder, for example `%APPDATA%\FastDownloadManager` on Windows. See
+[Settings](/docs/guide/settings/#where-settings-are-stored).
+
+## How do I report a problem?
+
+Open an issue in the <RepoLink path="/issues">repository</RepoLink>. Include the end of `fdm.log`; see
+[where the logs are](/docs/guide/troubleshooting/#where-the-logs-are).

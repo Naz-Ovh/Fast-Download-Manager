@@ -1,0 +1,47 @@
+---
+title: Getting started
+description: What Fast Download Manager does, your first download in three steps, and where to go next.
+---
+
+Fast Download Manager is a desktop download manager written in Rust. It splits each file into chunks and
+fetches them over several connections at once, 8 by default and up to 32. A stopped download resumes where it
+left off. Its own browser extension hands downloads and videos from Chrome, Edge, Brave and Firefox to the app,
+with the cookies and headers the site expects.
+
+## Quick start
+
+<Steps>
+<Step>
+
+### Install the app
+
+Windows is supported today. The installer is coming soon; until then you build the app from source in a few
+commands. See [Install](/docs/guide/install/).
+
+</Step>
+<Step>
+
+### Add the browser extension
+
+Load the extension once in Chrome, Edge, Brave or Firefox. It finds the app by itself and starts it in the
+background when needed. See [Browser extension](/docs/guide/browser-extension/).
+
+</Step>
+<Step>
+
+### Download something
+
+Click a download link in your browser, or paste a link with **Tasks → Add new download**. The **Download File
+Info** window opens; pick a folder and press **Start Download**. See [Downloading files](/docs/guide/downloading/).
+
+</Step>
+</Steps>
+
+## Where to go next
+
+<Cards>
+  <Card title="Downloading files" href="/docs/guide/downloading/" description="The list, categories, pause and resume, speed limit and the tray." />
+  <Card title="Video" href="/docs/guide/video/" description="Save videos from web pages: direct files, HLS and DASH streams." />
+  <Card title="Command line" href="/docs/guide/cli/" description="Download, resume and merge files from a terminal with fdm." />
+  <Card title="Troubleshooting" href="/docs/guide/troubleshooting/" description="The extension says disconnected, where the logs are, and other fixes." />
+</Cards>

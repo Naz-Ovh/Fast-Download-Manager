@@ -1,0 +1,113 @@
+---
+title: Troubleshooting
+description: The extension says disconnected, where the logs are, locked files when you rebuild, and downloads a site refuses.
+---
+
+## The extension shows "Not connected"
+
+The toolbar icon is grey with an "X", or the popup says **Not connected**.
+
+<Steps>
+<Step>
+
+### Start the app once
+
+On every start the app registers itself with Chrome, Edge, Brave and Firefox. If it has never run on this
+computer, the browser cannot find it. Start Fast Download Manager, then press **Retry now** in the popup.
+
+</Step>
+<Step>
+
+### Did you quit it?
+
+After **Exit** in the tray menu, the extension does not start the app again; the popup says "Fast Download
+Manager is closed". Start the app yourself.
+
+</Step>
+<Step>
+
+### Reload the extension
+
+Open the browser's extensions page and press **Reload** on the extension's card. Do this after every rebuild of
+the extension, too: the browser keeps running the old copy otherwise.
+
+</Step>
+<Step>
+
+### Register the browser link again
+
+From a source build, run `just host-install`. It registers the link for Chrome, Edge, Chromium, Brave and
+Firefox. Then restart the browser.
+
+</Step>
+</Steps>
+
+When it still fails, look at `native-host.log` (below): it shows whether the browser started the link and
+whether it reached the app.
+
+## Where the logs are
+
+The app writes `fdm.log`, and the browser link writes `native-host.log`, in a `logs` folder:
+
+<Tabs items={['Windows', 'Linux', 'macOS']}>
+<Tab value="Windows">
+
+```text
+%APPDATA%\FastDownloadManager\logs\fdm.log
+%APPDATA%\FastDownloadManager\logs\native-host.log
+```
+
+</Tab>
+<Tab value="Linux">
+
+```text
+~/.local/share/FastDownloadManager/logs/fdm.log
+~/.local/share/FastDownloadManager/logs/native-host.log
+```
+
+`$XDG_DATA_HOME` replaces `~/.local/share` when it is set.
+
+</Tab>
+<Tab value="macOS">
+
+```text
+~/Library/Application Support/FastDownloadManager/logs/fdm.log
+~/Library/Application Support/FastDownloadManager/logs/native-host.log
+```
+
+</Tab>
+</Tabs>
+
+From the repository, `just logs` follows the app log and `just logs native-host` the link's log. Set `RUST_LOG`
+(for example `fdm_engine=debug`) for more detail.
+
+## A site refuses the download
+
+Before it takes a download from the browser, the app asks the server for one byte with the browser's headers.
+Some sites block anything that is not a browser (bot protection, `403` or `429` answers). Then the app lets the
+**browser** download the file and the status bar says so. Nothing is lost; the browser's own download simply
+continues.
+
+## A download was interrupted, or restarts from zero
+
+Some servers cannot send parts of a file. Then the app downloads with **one connection**, cannot resume it after
+a stop, and does not retry it after a connection error. Start it again with **Redownload** in the right-click
+menu.
+
+A download also starts from zero when the file on the server changed (another size or date) since it began.
+
+## "The file is in use" when you rebuild (Windows)
+
+Windows locks a running program, and the browser restarts the link about a second after it stops. The `just`
+commands handle this for you:
+
+- `just build` moves running copies aside (`*.exe.<time>.old`, removed by a later build) so the build can
+  replace them.
+- `just run` stops the app started from the repository first. `just stop` only stops it.
+
+If you build with `cargo` directly, quit the app (tray → **Exit**) before you build.
+
+## Still stuck?
+
+Open an issue in the <RepoLink path="/issues">repository</RepoLink> with what you did, what you expected, and the
+end of `fdm.log`.

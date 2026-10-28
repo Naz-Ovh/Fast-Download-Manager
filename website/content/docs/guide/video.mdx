@@ -1,0 +1,74 @@
+---
+title: Video
+description: Save the video on a web page as one file. Direct media files and HLS and DASH streams, with audio merged in.
+---
+
+Play a video in your browser and the [extension](/docs/guide/browser-extension/) offers it: a small download
+button appears on the player, and the toolbar popup lists every video and audio file of the page. Pick a quality
+and the **Download File Info** window opens, named after the page title.
+
+## How detection works
+
+The extension watches what the page loads. Media files and stream playlists are reported to the app, which
+turns them into choices:
+
+- **Each video is offered once.** Streams load hundreds of small pieces; those are recognized as parts of one
+  video, not listed one by one.
+- **Small files are skipped.** Tiny audio clips, such as button sounds, are not offered.
+- **A reload starts fresh.** When the tab opens another page, its videos are offered again there.
+
+The button sits inside the player's top-right corner. Click it for **Download this video**, **Download all**
+and the list of qualities with size and type. See
+[the button](/docs/guide/browser-extension/#the-download-this-video-button) for dragging and closing it.
+
+## Direct media files
+
+MP4, WebM, MP3 and other media files the page plays are offered as they are and downloaded like any file, over
+several connections.
+
+## HLS streams
+
+Many players stream with HLS (`.m3u8` playlists of many short pieces). The app:
+
+- lists **one entry per quality** from the stream's master playlist;
+- downloads the pieces over several connections and saves **one file**;
+- decrypts streams protected with standard **AES-128** encryption;
+- follows streams that use **byte ranges** inside one large file;
+- downloads a **separate audio track** in parallel with the video and merges it in.
+
+The result is `.mp4`, or `.ts` when the stream and its audio are both TS. A stream already in MP4 pieces becomes
+a normal MP4 file.
+
+## DASH streams
+
+Sites that stream with DASH (`.mpd` manifests, video and audio in separate files) get one menu entry per video
+quality, for example `1 min 20 sec, quality 720p, 2500 kbps`. Picking one downloads that video **and the audio
+that belongs to it**, then merges them into one file. MP4 streams become `.mp4`; WebM streams become `.mkv`.
+
+## Merging audio and video
+
+Video and audio are joined by the app itself: there is nothing extra to install. The streams are copied as they
+are, never re-encoded, so quality stays exactly as the site sent it and merging takes seconds.
+
+| downloaded | saved as |
+| --- | --- |
+| MP4 video + MP4 audio (HLS, DASH) | `.mp4` |
+| TS video + TS or AAC audio (HLS) | `.ts` |
+| TS video + MP4 audio (HLS) | `.mp4` |
+| WebM video + WebM audio (DASH) | `.mkv` |
+| MP4 video + WebM audio | `.mkv` |
+
+If a merge fails, the audio is kept next to the video as `<name>_audio.<ext>`, so nothing is lost.
+
+## Not supported yet
+
+<Callout type="warn" title="What the app does not download">
+  - **Live streams** are not offered.
+  - **DRM-protected video** (and encrypted streams other than AES-128) cannot be saved.
+  - **HDS** (`.f4m`) streams are not read.
+</Callout>
+
+<Callout title="Coming soon">
+  - Support for more sites with their own players.
+  - A **Convert to MP4** choice for TS streams; today a TS-only stream is saved as `.ts`.
+</Callout>

@@ -1,0 +1,19 @@
+// Cloudflare Workers config for the website: static assets only (no Worker script, so no `main`).
+// Docs: https://developers.cloudflare.com/workers/static-assets/ and .../workers/wrangler/configuration/
+{
+  "name": "fdm-website",
+  "compatibility_date": "2026-10-19",
+  "assets": {
+    // The prerendered site (`pnpm build`). `_headers` in it sets cache and security headers.
+    "directory": "./out",
+    // Unknown paths get out/404.html with a 404 status.
+    "not_found_handling": "404-page",
+    // Every route is <route>/index.html, served at /route/; /route redirects there.
+    "html_handling": "auto-trailing-slash"
+  },
+  // naz.ovh is a zone on the same Cloudflare account, so the first `wrangler deploy` creates the
+  // fdm.naz.ovh DNS record and its certificate itself (it fails if a CNAME for that name already exists).
+  "routes": [{ "pattern": "fdm.naz.ovh", "custom_domain": true }],
+  // The site answers only on its domain, not on a *.workers.dev address.
+  "workers_dev": false
+}

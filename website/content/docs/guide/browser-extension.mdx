@@ -1,0 +1,123 @@
+---
+title: Browser extension
+description: Send downloads and videos from Chrome, Edge, Brave and Firefox to Fast Download Manager.
+---
+
+The extension connects your browser to the app. When you click a link to a file, the app takes the download
+with the browser's cookies, referrer and headers, so downloads behind a login work too. It also finds the videos
+on a page and puts a small download button on them.
+
+## Supported browsers
+
+| browser | how to load it today |
+| --- | --- |
+| Google Chrome | `chrome://extensions` → Load unpacked |
+| Microsoft Edge | `edge://extensions` → Load unpacked |
+| Brave | `brave://extensions` → Load unpacked |
+| Mozilla Firefox | `about:debugging` → Load Temporary Add-on |
+
+<Callout title="Store listings coming soon">
+  The extension will be published in the Chrome Web Store, Microsoft Edge Add-ons and Firefox Add-ons. Until
+  then you load it from a folder, once.
+</Callout>
+
+## Load the extension
+
+Start Fast Download Manager once first: on every start it registers itself with your browsers so the extension
+can reach it.
+
+<Tabs items={['Chrome, Edge, Brave', 'Firefox']}>
+<Tab value="Chrome, Edge, Brave">
+
+<Steps>
+<Step>
+Open `chrome://extensions`, `edge://extensions` or `brave://extensions`.
+</Step>
+<Step>
+Turn on **Developer mode**.
+</Step>
+<Step>
+Press **Load unpacked** and pick the `extension/dist/chromium` folder (when you build from source, it is in the
+repository).
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox">
+
+<Steps>
+<Step>
+Open `about:debugging`, then **This Firefox**.
+</Step>
+<Step>
+Press **Load Temporary Add-on** and pick `extension/dist/firefox/manifest.json`.
+</Step>
+</Steps>
+
+Firefox removes a temporary add-on when it closes, so load it again after a restart. Firefox support is newer
+and less tested than Chromium's.
+
+</Tab>
+</Tabs>
+
+After you rebuild the extension, press **Reload** on its card in the extensions page.
+
+## The toolbar popup
+
+Click the extension's toolbar icon to see:
+
+- **The connection.** Connecting, Connected (with the app's version) or Not connected, with a **Retry now**
+  button. The icon turns grey with an "X" while the app is not connected.
+- **Every video and audio file on the page**, grouped per player, with each quality's size and type. Click one
+  to download it.
+- **Integration on this tab.** Turn the extension off for the current tab. It turns back on when the tab opens
+  another site.
+
+The extension starts the app in the background when it is closed. After you quit the app on purpose (tray menu
+→ **Exit**), it waits and the popup says "Fast Download Manager is closed" until you start the app again.
+
+## Download capture
+
+When you click a link to a file type the app handles (archives, programs, documents, media and more), the
+browser's own download stops and the **Download File Info** window opens in the app instead.
+
+| hold | while you click | result |
+| --- | --- | --- |
+| nothing | a download link | the app takes it if it is a file type it handles |
+| **Alt** | a download link | the browser downloads it itself |
+| **Ctrl** | any link | the app takes it, whatever the type |
+
+If a site refuses the app's connection, the browser keeps that download and the app's status bar says so. See
+[Troubleshooting](/docs/guide/troubleshooting/#a-site-refuses-the-download).
+
+## Right-click menus
+
+- **Download with FDM** on a link, image, video, page or frame sends it to the app.
+- **Download selected links with FDM** collects the links in your selection.
+- **Download all links with FDM** collects every link of the page and its frames: links, images, frames and web
+  addresses written in the text.
+- **Transfer download to FDM** on Chrome's downloads page moves a browser download to the app.
+
+<Callout title="Coming soon">
+  For "Download all links" and "Download selected links", the app shows how many links arrived. The window to
+  pick and download them is coming soon.
+</Callout>
+
+## The "Download this video" button
+
+When a page plays a video, a small see-through download button appears in the player's top-right corner. While
+you scroll, it floats down the video so it stays in reach.
+
+- **Click** it to open its menu: **Download this video** (or audio), **Download all** when there are several,
+  then each quality with its size and type, for example `quality 1080p` or `128 kbps (audio only)`.
+- **Drag** it to move it. The place is remembered per site. **Double-click** puts it back.
+- **About this panel** and **Close** sit at the end of the menu.
+
+The button fades when the pointer leaves it, so it does not cover the video. More in [Video](/docs/guide/video/).
+
+## Languages
+
+The extension's menus, popup and button speak the browser's language: Arabic, Chinese (simplified and
+traditional), Dutch, English, French, German, Hebrew, Italian, Persian, Polish, Portuguese, Russian, Spanish,
+Thai, Turkish and Vietnamese, 17 in all. Other languages get English. In Arabic, Persian and Hebrew the popup and
+the button's menu are laid out right to left.

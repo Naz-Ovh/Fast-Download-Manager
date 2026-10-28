@@ -1,0 +1,112 @@
+---
+title: Downloading files
+description: Add downloads, read the list, sort files into categories, pause and resume, limit the speed and use the tray.
+---
+
+Every download is split into chunks that several connections fetch at the same time. Each new connection takes
+half of the biggest piece still left, and a connection that finishes early takes over an idle neighbor's piece,
+so they all stay busy until the end.
+
+## Add a download
+
+- **From the browser.** Click a download link. With the [extension](/docs/guide/browser-extension/), the app
+  takes it with the browser's cookies and headers.
+- **By address.** **Tasks → Add new download** (or **Add URL** on the tool bar). When the clipboard holds a web
+  address, the field is already filled in.
+
+## The Download File Info window
+
+Before a download starts, this window shows what will be saved:
+
+- the **address**, the **category** and the **file name and folder** (Save As), with **Remember this path**;
+- a **description** you can add.
+
+Press **Start Download** to start, **Download Later** to add it to the list stopped, or **Cancel**.
+
+## The download list
+
+The main window shows the category tree on the left and the download list beside it. The status bar shows
+whether the browser is connected, how many downloads run and the total speed.
+
+| column | shows |
+| --- | --- |
+| File name | name and file-type icon |
+| Q | queue mark |
+| Size | total size |
+| Status | percentage done and a progress bar, or Complete, or Error |
+| Time left | for example `2 min 10 sec` |
+| Transfer rate | current speed, with `(Limited)` while the speed limiter is on |
+| Last try date | when it last ran |
+| Description | your note, or the reason for an error |
+| Date added, Save to, Referer, Parent web page | hidden by default |
+
+- **Sort** with a click on a column header (again to reverse), or **View → Arrange files**.
+- **Show, hide and reorder columns** with **View → Customize list columns…** or a right click on the header.
+- **Select** with click, Ctrl+click, Shift+click and Ctrl+A. Delete removes, Ctrl+M moves or renames.
+- **Double-click** opens the file's Properties, or the file itself: choose in the right-click menu under
+  **On double click**.
+
+Right-click a download for **Open**, **Open with…**, **Open folder**, **Move/Rename…**, **Redownload**,
+**Resume download**, **Stop download**, **Remove** and **Properties**.
+
+## Categories and folders
+
+New downloads are sorted by file type into **Compressed**, **Documents**, **Music**, **Programs**, **Video** and
+**General**, and saved in that category's folder. The tree shows **All downloads**, **Unfinished** and
+**Finished**, each with the categories under it and a count. Right-click a category and choose **Open folder** to
+see its files.
+
+## Pause, stop and resume
+
+- **Stop** a download from the tool bar or its right-click menu, or **Downloads → Stop all**.
+- **Resume** it later, also after you quit the app or restart the computer. The app saves which chunks are done
+  and fetches only the rest.
+- On resume the app checks that the file on the server is still the same (size and date). If it changed, the
+  download starts again from zero.
+
+Resume needs a server that can send parts of a file. When it cannot, the file downloads over one connection and
+starts over after a stop.
+
+## Connections
+
+Each download uses up to **8 connections** by default, and up to **32**. The app does not open them all at once:
+it starts with one and doubles the number (1, 2, 4, 8) about once per second while every connection receives
+data. A connection that stalls for 30 seconds restarts, and failed connections retry with growing pauses.
+
+<Callout title="Coming soon">
+  Changing the number of connections in the app comes with the Options window. The
+  [command line](/docs/guide/cli/) takes it as an argument today.
+</Callout>
+
+## Speed limiter
+
+**Downloads → Speed limiter → Turn on** caps each download at the limit (10 KB/s by default); running downloads
+follow at once. **Turn off** lifts it. Setting your own limit comes with the Options window.
+
+## File names and duplicates
+
+The name comes from the server when it sends one, otherwise from the address. Characters that are not allowed
+in file names are replaced. If a file with that name already exists, the new one is saved as `name_2.ext`,
+`name_3.ext` and so on. Nothing is overwritten.
+
+While it downloads, the file is a single `.fdmpart` file. It is moved into place when it is complete.
+
+## Download complete
+
+When a download finishes, the **Download complete** window shows the size, the address and where the file was
+saved, with **Open**, **Open with…**, **Open folder** and **Close**. Tick **Don't show this dialog again** to
+turn it off.
+
+## The tray
+
+On Windows the app lives in the tray:
+
+- **Closing the window hides it** to the tray. Downloads keep running.
+- Right-click the tray icon for **Open**, **Pause all**, **Resume all** and **Exit**.
+- **Exit** quits the app. The browser does not start it again until you do.
+
+## Removing downloads
+
+**Remove** (Delete key) takes downloads off the list. For complete downloads you can also send the files to the
+Recycle Bin. **Downloads → Delete all completed** clears every finished download from the list and keeps the
+files.

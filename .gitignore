@@ -1,0 +1,10 @@
+# Website (website/): dependencies, TanStack Start and Fumadocs output, prebuild results
+/website/node_modules/
+/website/out/
+/website/dist/
+/website/.tanstack/
+/website/.source/
+/website/.wrangler/
+/website/*.tsbuildinfo
+/website/src/generated/
+/website/src/routeTree.gen.ts

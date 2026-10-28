@@ -1,0 +1,5 @@
+# pnpm settings for the website (the browser extension also uses pnpm, with its own lockfile).
+# Dependency install scripts stay off. esbuild (via fumadocs-mdx) gets its binary from its optional
+# @esbuild/<platform> package, so its postinstall check is not needed.
+allowBuilds:
+  esbuild: false

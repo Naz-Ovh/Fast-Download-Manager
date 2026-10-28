@@ -1,0 +1,20 @@
+{
+  "title": "Guide",
+  "description": "Install, browser extension, video, everyday use",
+  "root": true,
+  "pages": [
+    "---Start---",
+    "index",
+    "install",
+    "browser-extension",
+    "---Use---",
+    "downloading",
+    "video",
+    "cli",
+    "settings",
+    "---Help---",
+    "troubleshooting",
+    "faq",
+    "roadmap"
+  ]
+}

@@ -1,0 +1,485 @@
+/* Docs area styles (imported by src/app/docs/layout.tsx). Calm and readable, with the site's speed DNA:
+ * 120 ms content reveal, a mint streak on the active sidebar item, mint focus glow on search, stronger radii,
+ * no stacked hairlines. Uses the tokens of src/app/global.css only (no new colors).
+ * Sections: 1 page reveal · 2 sidebar · 3 search · 4 page chrome and prose · 5 docs home · 6 reduced motion */
+
+/* ── 1. Page reveal: the article arrives in 120 ms on every page mount ─────────────────────────────── */
+@keyframes fdm-docs-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fdm-docs #nd-page {
+  animation: fdm-docs-in var(--fdm-dur-fast) var(--fdm-ease) both;
+}
+
+/* ── 2. Sidebar ───────────────────────────────────────────────────────────────────────────────────── */
+#nd-sidebar :is(a, button) {
+  border-radius: 10px;
+}
+
+/* Active item: tinted, weight 500, and a short mint streak at its end that shoots in (room kept for it). */
+#nd-sidebar a[data-active='true'] {
+  font-weight: 500;
+  padding-inline-end: 2.25rem;
+  background-color: var(--fdm-tint);
+  color: var(--fdm-primary-text);
+}
+
+#nd-sidebar a[data-active='true']::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: 0.625rem;
+  top: 50%;
+  width: 1.125rem;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--fdm-glow));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--fdm-glow) 55%, transparent);
+  animation: fdm-docs-streak 200ms var(--fdm-ease) both;
+}
+
+[dir='rtl'] #nd-sidebar a[data-active='true']::after {
+  background: linear-gradient(270deg, transparent, var(--fdm-glow));
+}
+
+@keyframes fdm-docs-streak {
+  from {
+    opacity: 0;
+    transform: translateX(-14px) scaleX(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The folder guide line and the active marker inside folders: mint instead of a grey hairline. */
+#nd-sidebar a[data-active='true']::before {
+  width: 2px;
+  border-radius: 999px;
+  background-color: var(--color-fd-primary);
+}
+
+/* Tab switcher at the top of the sidebar: a panel, not a hairline box. */
+#nd-sidebar [data-popup-open],
+#nd-sidebar button[aria-haspopup] {
+  border-radius: 12px;
+}
+
+/* ── 3. Search trigger: mint glow on hover and focus ─────────────────────────────────────────────── */
+:is(#nd-sidebar, #nd-subnav, .fdm-docs) [data-search-full] {
+  border-radius: 12px;
+  transition:
+    box-shadow var(--fdm-dur-fast) var(--fdm-ease),
+    border-color var(--fdm-dur-fast) var(--fdm-ease),
+    background-color var(--fdm-dur-fast) var(--fdm-ease),
+    color var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+:is(#nd-sidebar, #nd-subnav, .fdm-docs) [data-search-full]:hover {
+  border-color: color-mix(in srgb, var(--color-fd-primary) 35%, transparent);
+}
+
+:is(#nd-sidebar, #nd-subnav, .fdm-docs) :is([data-search-full], [data-search]):focus-visible {
+  outline: none;
+  border-color: var(--color-fd-primary);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--fdm-glow) 28%, transparent),
+    0 0 24px -4px color-mix(in srgb, var(--fdm-glow) 55%, transparent);
+}
+
+/* ── 4. Page chrome and prose ────────────────────────────────────────────────────────────────────── */
+/* Copy Markdown / Open menu row: spacing instead of a bottom hairline. */
+.fdm-docs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+}
+
+.fdm-docs-actions :is(button, a) {
+  border-radius: 10px;
+}
+
+/* Code blocks, callouts, cards, tabs and tables: 14-16 px radii, soft shadow instead of a second border. */
+.fdm-docs #nd-page figure.shiki {
+  border-radius: 14px;
+}
+
+.fdm-docs #nd-page .prose :is(div[class*='rounded-xl'][class*='border'], div.fd-callout) {
+  border-radius: 14px;
+}
+
+.fdm-docs #nd-page .prose a[class*='rounded-xl'][class*='border'] {
+  border-radius: 16px;
+  transition:
+    transform var(--fdm-dur-fast) var(--fdm-ease),
+    box-shadow var(--fdm-dur-fast) var(--fdm-ease),
+    border-color var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+.fdm-docs #nd-page .prose a[class*='rounded-xl'][class*='border']:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: var(--fdm-ring-hover);
+}
+
+.fdm-docs #nd-page .prose :where(table) {
+  border-radius: 12px;
+}
+
+/* Blockquotes are notes here: a quiet mint panel. */
+.fdm-docs #nd-page .prose blockquote {
+  margin-inline: 0;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background-color: var(--fdm-tint);
+  color: var(--color-fd-muted-foreground);
+  font-style: normal;
+  font-size: 0.875rem;
+}
+
+.fdm-docs #nd-page .prose blockquote :where(p) {
+  margin: 0;
+}
+
+.fdm-docs #nd-page .prose blockquote :where(p)::before,
+.fdm-docs #nd-page .prose blockquote :where(p)::after {
+  content: none;
+}
+
+/* Steps: mint step numbers. */
+.fdm-docs #nd-page .fd-step::before {
+  background-color: var(--fdm-tint);
+  color: var(--fdm-primary-text);
+  font-family: var(--font-mono);
+}
+
+/* ── 5. Docs home ────────────────────────────────────────────────────────────────────────────────── */
+.fdm-docs-hero {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 20px;
+  background-color: var(--color-fd-card);
+  background-image: radial-gradient(
+    ellipse 70% 90% at 100% 0%,
+    color-mix(in srgb, var(--fdm-glow) 14%, transparent),
+    transparent 70%
+  );
+  box-shadow:
+    0 1px 2px rgba(13, 27, 30, 0.04),
+    0 12px 40px -20px rgba(13, 27, 30, 0.25);
+  overflow: hidden;
+}
+
+.dark .fdm-docs-hero {
+  box-shadow:
+    0 0 0 1px var(--color-fd-border),
+    0 16px 48px -24px rgba(0, 0, 0, 0.7);
+}
+
+@media (min-width: 768px) {
+  .fdm-docs-hero {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 2.25rem 2.5rem;
+  }
+}
+
+.fdm-docs-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.fdm-docs-hero-text .fdm-eyebrow {
+  margin: 0;
+}
+
+.fdm-docs-hero-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.fdm-docs-hero-lead {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* Chunk motif: the logo, then five lanes that fill block by block once (the engine's parallel connections). */
+.fdm-lanes {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.125rem;
+  border-radius: 16px;
+  background-color: var(--fdm-ink);
+  box-shadow: inset 0 0 0 1px rgba(124, 245, 198, 0.12);
+  width: fit-content;
+}
+
+.fdm-lanes-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.fdm-lane {
+  display: flex;
+  gap: 4px;
+}
+
+.fdm-lane > span {
+  width: 14px;
+  height: 8px;
+  border-radius: 3px;
+  background-color: var(--lane);
+  animation: fdm-lane-block 220ms var(--fdm-ease) both;
+  animation-delay: calc(80ms + var(--b) * (45ms + var(--l) * 9ms) + var(--l) * 30ms);
+}
+
+.fdm-lane > span:last-child {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--lane) 70%, transparent);
+}
+
+@keyframes fdm-lane-block {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) scaleX(1.6);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(1px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Entry cards */
+.fdm-entry-grid {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .fdm-entry-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.fdm-entry {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 1.375rem 1.375rem 1.125rem;
+  border-radius: 18px;
+  background-color: var(--color-fd-card);
+  color: var(--color-fd-card-foreground);
+  text-decoration: none;
+  box-shadow:
+    0 0 0 1px var(--color-fd-border),
+    0 8px 28px -18px rgba(13, 27, 30, 0.3);
+  overflow: hidden;
+  /* `backwards`, not `both`: a kept `transform: none` would block the hover lift below. */
+  animation: fdm-reveal var(--fdm-dur-reveal) var(--fdm-ease) backwards;
+  animation-delay: calc(60ms + var(--fdm-i, 0) * var(--fdm-stagger-step));
+  transition:
+    transform var(--fdm-dur-fast) var(--fdm-ease),
+    box-shadow var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+.fdm-entry:hover,
+.fdm-entry:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--fdm-ring-hover);
+}
+
+.fdm-entry:focus-visible {
+  outline: 2px solid var(--color-fd-ring);
+  outline-offset: 2px;
+}
+
+/* A lane of six blocks across the top edge; on hover it fills left to right. */
+.fdm-entry-lane {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  gap: 3px;
+  height: 3px;
+}
+
+.fdm-entry-lane > span {
+  flex: 1;
+  background-color: var(--color-fd-primary);
+  opacity: 0.16;
+  transition: opacity 90ms var(--fdm-ease);
+  transition-delay: calc(var(--fdm-k) * 22ms);
+}
+
+.fdm-entry:hover .fdm-entry-lane > span,
+.fdm-entry:focus-visible .fdm-entry-lane > span {
+  opacity: 1;
+}
+
+.fdm-entry-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  background-color: var(--fdm-tint);
+  color: var(--fdm-primary-text);
+}
+
+.fdm-entry-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.fdm-entry-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.fdm-entry-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-fd-muted-foreground);
+}
+
+.fdm-entry-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.fdm-entry-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fdm-primary-text);
+}
+
+.fdm-entry-arrow {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--color-fd-muted-foreground);
+  transition:
+    transform var(--fdm-dur-fast) var(--fdm-ease),
+    color var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+.fdm-entry:hover .fdm-entry-arrow {
+  transform: translateX(4px);
+  color: var(--fdm-primary-text);
+}
+
+[dir='rtl'] .fdm-entry-arrow,
+[dir='rtl'] .fdm-more-arrow {
+  rotate: 180deg;
+}
+
+/* Quieter row: CLI, troubleshooting */
+.fdm-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.5rem 1rem;
+}
+
+.fdm-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding-inline: 0.875rem;
+  border-radius: 12px;
+  background-color: var(--fdm-surface-2);
+  color: var(--color-fd-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    box-shadow var(--fdm-dur-fast) var(--fdm-ease),
+    background-color var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+.fdm-more-link svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--fdm-primary-text);
+}
+
+.fdm-more-link .fdm-more-arrow {
+  color: var(--color-fd-muted-foreground);
+  transition: transform var(--fdm-dur-fast) var(--fdm-ease);
+}
+
+.fdm-more-link:hover {
+  background-color: var(--color-fd-card);
+  box-shadow: var(--fdm-ring-hover);
+}
+
+.fdm-more-link:hover .fdm-more-arrow {
+  transform: translateX(3px);
+}
+
+/* The docs home is short. DocsBody is flex-1 inside #nd-page, which would push the next-page card to the
+ * bottom of the viewport; on the home it keeps its content height, so the card follows the links. */
+.fdm-docs #nd-page .fdm-docs-home-body {
+  flex: none;
+  margin-bottom: 1rem;
+}
+
+/* ── 6. Reduced motion: opacity only, no streaks ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .fdm-docs #nd-page,
+  .fdm-entry {
+    animation-name: fdm-fade;
+  }
+  .fdm-lane > span {
+    animation: none;
+  }
+  #nd-sidebar a[data-active='true']::after {
+    animation: none;
+  }
+  .fdm-entry,
+  .fdm-entry-arrow,
+  .fdm-more-link .fdm-more-arrow {
+    transition-property: box-shadow, color, background-color;
+  }
+  .fdm-entry:hover,
+  .fdm-entry:focus-visible,
+  .fdm-entry:hover .fdm-entry-arrow,
+  .fdm-more-link:hover .fdm-more-arrow {
+    transform: none;
+  }
+}
