@@ -1,113 +1,63 @@
 ---
 title: Install
-description: Windows is supported today. The installer is coming soon; until then, build the app from source.
+description: Install Fast Download Manager on Windows or Linux from the latest release.
 ---
 
-Fast Download Manager runs on Windows (x64) today. The code is cross-platform, and Linux and macOS builds are
-on the way.
+Download the file for your system from the [latest release](https://github.com/Naz-Ovh/Fast-Download-Manager/releases/latest).
+Each file holds the whole product: the app, the browser link, the `fdm` command line and the browser extension.
+Nothing more is downloaded during setup.
 
 ## Windows
 
-<Callout title="Installer coming soon">
-  One `.msi` setup file will hold the whole product: the app, the browser link, the `fdm` command line and the
-  browser extension. Nothing is downloaded during setup. Until it is published, [build from
-  source](#build-from-source).
-</Callout>
-
-What the installer will do:
+Windows 10 and 11, x64. Open `FastDownloadManager-<version>-x64.msi`.
 
 - **Choose who gets it.** **Just me** installs for your account without administrator rights. **Everyone on
   this computer** installs for all users and asks for administrator rights.
 - **Start with Windows.** On by default, so the app waits in the tray after you sign in. You can turn it off
   in the app's settings.
-- **Connect your browsers.** The browser link is registered for Chrome, Edge, Brave and Firefox. The last setup
-  page shows the extension folder to load. See [Browser extension](/docs/guide/browser-extension/).
-- **Update in place.** Running a newer setup closes the app, replaces it and starts it again.
+- **Connect your browsers.** The last setup page has a button that opens the extension folder. See
+  [Browser extension](/docs/guide/browser-extension/).
+- **Update in place.** Running a newer setup closes the app, replaces it and starts it again. Your settings and
+  downloads stay.
 
-## Linux and macOS
+## Linux
 
-<Callout title="Coming soon">
-  Linux packages (`.deb`, `.rpm`, `.pacman`, AppImage and a one-line install command) and a macOS `.dmg` are
-  planned. The engine, the app and the extension are written to run on all three systems.
-</Callout>
+x86_64, Wayland desktops (KDE and GNOME first), glibc 2.31 or newer (Ubuntu 20.04, Debian 11 and later).
 
-## Build from source
-
-You need [Rust](https://rustup.rs), [Node.js](https://nodejs.org) 22 or newer and
-[just](https://github.com/casey/just). On Windows, `just` uses PowerShell 7.
-
-<Steps>
-<Step>
-
-### Get the tools
-
-<Tabs items={['Windows', 'Linux', 'macOS']}>
-<Tab value="Windows">
-
-```powershell
-winget install Rustlang.Rustup OpenJS.NodeJS.LTS Casey.Just Microsoft.PowerShell
-```
-
-</Tab>
-<Tab value="Linux">
+<Tabs items={['Any distribution', 'Debian, Ubuntu', 'Arch']}>
+<Tab value="Any distribution">
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-# Node.js 22+ and just from your distribution, for example:
-sudo apt install nodejs npm just
+sh FastDownloadManager-*.run
 ```
+
+The setup asks **Just me** (no root, in your home folder) or **Everyone** (asks for your password).
 
 </Tab>
-<Tab value="macOS">
+<Tab value="Debian, Ubuntu">
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-brew install node just
+sudo apt install ./fast-download-manager_*.deb
 ```
+
+Remove it with `sudo apt remove fast-download-manager`; your settings and downloads stay.
+
+</Tab>
+<Tab value="Arch">
+
+```bash
+sudo pacman -U fast-download-manager-*.pkg.tar.zst
+```
+
+Remove it with `sudo pacman -R fast-download-manager`.
 
 </Tab>
 </Tabs>
 
-</Step>
-<Step>
+The first start registers the browser link and adds the app to your session's autostart.
 
-### Install the extension's packages
+## macOS
 
-Run this once in the repository folder, and again after the extension's `package.json` changes.
-
-```bash
-just ext-install
-```
-
-</Step>
-<Step>
-
-### Build and start
-
-```bash
-just run
-```
-
-This builds the app, the browser link, the command line and the extension, then opens the app. Run `just` to
-list every other command. `just run-release` makes an optimized build.
-
-</Step>
-<Step>
-
-### Load the extension
-
-Load `extension/dist/chromium` (Chrome, Edge, Brave) or `extension/dist/firefox/manifest.json` (Firefox) once,
-as described in
-[Browser extension](/docs/guide/browser-extension/#load-the-extension).
-
-</Step>
-</Steps>
-
-<Callout type="warn" title="Linux and macOS builds">
-  Building on Linux and macOS is not tested yet. The tray icon is Windows-only today: elsewhere, closing the
-  window quits the app.
+<Callout title="Coming later">
+  A macOS `.dmg` is planned. See the [roadmap](/docs/guide/roadmap/).
 </Callout>
-
-On Windows you can also build the installer yourself: `just package` writes
-`target/package/FastDownloadManager-<version>-x64.msi`, and `just install` builds it and installs it for your
-account.

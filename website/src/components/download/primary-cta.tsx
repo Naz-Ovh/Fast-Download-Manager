@@ -56,13 +56,13 @@ export function PrimaryCta() {
   return (
     <div className="dl-cta-wrap dl-rise" style={{ '--delay': '420ms' } as CSSProperties} data-os={os}>
       {!live ? (
-        <Link href={INSTALL_GUIDE} className="dl-cta" aria-label={`${name} build coming soon. Until then: build from source`}>
+        <Link href={INSTALL_GUIDE} className="dl-cta" aria-label={`${name} build coming soon. See the install guide`}>
           <span className="dl-cta-logo">
             <Logo size={44} />
           </span>
           <span className="dl-cta-text">
             <span className="dl-cta-title">{name} build coming soon</span>
-            <span className="dl-cta-sub">Until then: build from source</span>
+            <span className="dl-cta-sub">See the install guide</span>
           </span>
           <ArrowRight className="dl-cta-arrow" aria-hidden />
         </Link>

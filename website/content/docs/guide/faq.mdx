@@ -5,7 +5,7 @@ description: Short answers to common questions about Fast Download Manager.
 
 ## Does it work with Brave?
 
-Yes. Brave uses the same extension as Chrome and Edge: load `extension/dist/chromium` in `brave://extensions`.
+Yes. Brave uses the same extension as Chrome and Edge: load the `extension/chromium` folder from the app's install folder in `brave://extensions`.
 See [Browser extension](/docs/guide/browser-extension/).
 
 ## Does it need ffmpeg?
@@ -35,13 +35,13 @@ extension off for one tab in its popup.
 
 ## How do I update?
 
-From source: pull the latest code and run `just run`, then press **Reload** on the extension's card. With the
-Windows installer (coming soon), run the newer setup: it closes the app, replaces it and starts it again.
+Install the newer release over the old one: the setup closes the app, replaces it and starts it again. Your
+settings and downloads stay. Then press **Reload** on the extension's card.
 
 ## Is Linux supported?
 
-Not yet. The code is written to run on Windows, Linux and macOS, and Linux packages are planned; see the
-[roadmap](/docs/guide/roadmap/).
+Yes: x86_64 with a Wayland desktop and glibc 2.31 or newer, as a `.run` for any distribution, a `.deb` and an
+Arch package. See [Install](/docs/guide/install/). macOS comes later.
 
 ## Can it download live streams or protected video?
 

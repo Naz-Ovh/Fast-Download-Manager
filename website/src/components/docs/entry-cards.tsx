@@ -10,8 +10,8 @@ const entries: { href: string; title: string; text: string; label: string; icon:
   {
     href: '/docs/guide/install/',
     title: 'Install',
-    text: 'Get Fast Download Manager running on Windows, or build it from source today.',
-    label: 'Windows · build from source',
+    text: 'Install Fast Download Manager on Windows or Linux from the latest release.',
+    label: 'Windows · Linux',
     icon: Download,
   },
   {

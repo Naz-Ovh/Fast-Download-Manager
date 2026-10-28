@@ -1,11 +1,18 @@
 # Fast Download Manager, public repo: the website and the release notes. Run `just` to list the recipes.
 # Needs: Node 22+, pnpm, just. Windows uses PowerShell 7 (pwsh).
 
-set windows-shell := ["pwsh", "-NoLogo", "-NoProfile", "-Command"]
+[windows]
+set shell := ["pwsh", "-NoLogo", "-NoProfile", "-Command"]
 
 # List the recipes
 default:
     @just --list --unsorted
+
+# ── README banner ───────────────────────────────────────────────────
+
+# Record the README banner into .github/assets (needs Chrome or Edge, ffmpeg, and site-build once for the fonts)
+banner:
+    node .github/banner/record.mjs
 
 # ── Website ─────────────────────────────────────────────────────────
 # The product website (Fumadocs on TanStack Start, prerendered to static files) in website/. See

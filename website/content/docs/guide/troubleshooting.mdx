@@ -36,8 +36,8 @@ the extension, too: the browser keeps running the old copy otherwise.
 
 ### Register the browser link again
 
-From a source build, run `just host-install`. It registers the link for Chrome, Edge, Chromium, Brave and
-Firefox. Then restart the browser.
+Quit the app (tray → **Exit**) and start it again: on every start it registers the link for Chrome, Edge,
+Chromium, Brave and Firefox. Then restart the browser.
 
 </Step>
 </Steps>
@@ -78,8 +78,8 @@ The app writes `fdm.log`, and the browser link writes `native-host.log`, in a `l
 </Tab>
 </Tabs>
 
-From the repository, `just logs` follows the app log and `just logs native-host` the link's log. Set `RUST_LOG`
-(for example `fdm_engine=debug`) for more detail.
+Set the `RUST_LOG` environment variable (for example `fdm_engine=debug`) before starting the app for more
+detail.
 
 ## A site refuses the download
 
@@ -95,17 +95,6 @@ a stop, and does not retry it after a connection error. Start it again with **Re
 menu.
 
 A download also starts from zero when the file on the server changed (another size or date) since it began.
-
-## "The file is in use" when you rebuild (Windows)
-
-Windows locks a running program, and the browser restarts the link about a second after it stops. The `just`
-commands handle this for you:
-
-- `just build` moves running copies aside (`*.exe.<time>.old`, removed by a later build) so the build can
-  replace them.
-- `just run` stops the app started from the repository first. `just stop` only stops it.
-
-If you build with `cargo` directly, quit the app (tray → **Exit**) before you build.
 
 ## Still stuck?
 

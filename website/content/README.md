@@ -14,7 +14,7 @@ publishes every `.md` and `.mdx` file inside `content/docs/` as a page.
 | page | route | brief |
 | --- | --- | --- |
 | `index.mdx` | `/docs/guide/` | Getting started: what the app is, the three-step quick start, where next |
-| `install.mdx` | `/docs/guide/install/` | Windows (installer coming soon), Linux and macOS (coming soon), build from source |
+| `install.mdx` | `/docs/guide/install/` | Windows `.msi`, Linux `.run` / `.deb` / Arch package, macOS later |
 | `browser-extension.mdx` | `/docs/guide/browser-extension/` | browsers, loading it, popup, capture keys, menus, the video button, languages |
 | `downloading.mdx` | `/docs/guide/downloading/` | Add URL, Download File Info, the list, categories, resume, connections, limiter, tray |
 | `video.mdx` | `/docs/guide/video/` | detection, direct files, HLS, DASH, merging, what is not supported |

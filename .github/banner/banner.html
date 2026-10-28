@@ -1,0 +1,172 @@
+<!doctype html>
+<!--
+  The README banner (10:3, 1000x300 CSS px), in the look of the app's setup welcome screen: the name on the left,
+  the brand mark on the right with its looping block animation and breathing glow, light streaks travelling across
+  the ink background. The motion is the setup's (fdm-setup-ui: logo.rs Live::at, motion.rs), so both move alike.
+  render(t) draws any time t in seconds, so record.mjs can step it frame by frame; opened in a browser it plays
+  by itself. One loop is 5.2 s (two loops of the mark). Fonts: the website's Geist files
+  (website/src/generated/fonts, written by the website's prebuild).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Banner</title>
+<style>
+  @font-face { font-family: Geist; src: url(../../website/src/generated/fonts/geist-latin.woff2) format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: 'Geist Mono'; src: url(../../website/src/generated/fonts/geist-mono-latin.woff2) format('woff2'); font-weight: 100 900; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1000px; height: 300px; overflow: hidden; background: #0d1b1e; }
+  body { font-family: Geist, system-ui, sans-serif; color: #e6f2ee; -webkit-font-smoothing: antialiased; }
+  canvas { position: absolute; inset: 0; width: 1000px; height: 300px; }
+  .left { position: absolute; left: 64px; top: 0; bottom: 0; width: 520px; display: flex; flex-direction: column; justify-content: center; }
+  /* Monospace like the setup's version pill: crisp at this size once the GIF is scaled down. */
+  .pill { align-self: flex-start; display: flex; align-items: center; gap: 9px; padding: 7px 14px; border-radius: 999px;
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 14.5px; font-weight: 500; letter-spacing: 0.02em; color: #e6f2ee; background: rgba(124, 245, 198, 0.07); box-shadow: inset 0 0 0 1px rgba(124, 245, 198, 0.2); }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; background: #45e0b0; box-shadow: 0 0 8px #45e0b0; }
+  h1 { margin-top: 20px; font-size: 64px; line-height: 1.02; font-weight: 700; letter-spacing: -0.035em; }
+  h1 span { color: #7cf5c6; }
+  .tag { margin-top: 18px; font-size: 19px; line-height: 1.45; color: #8fa8a1; }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="left">
+  <span class="pill"><i id="dot"></i>Windows · Linux</span>
+  <h1>Fast Download<br><span>Manager</span></h1>
+  <p class="tag">Every download split into parallel chunks, done sooner.</p>
+</div>
+<script>
+  const W = 1000, H = 300, CYCLE = 5.2, LOOP = 2.6;
+  const LOGO = { cx: 800, cy: 150, size: 220 };
+  const cv = document.getElementById('cv');
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const ctx = cv.getContext('2d');
+
+  // motion.rs: cubic-bezier easing, phase, ease.
+  function bezier(x1, y1, x2, y2, t) {
+    t = Math.min(1, Math.max(0, t));
+    const curve = (a, b, s) => { const u = 1 - s; return 3 * u * u * s * a + 3 * u * s * s * b + s * s * s; };
+    let s = t;
+    for (let i = 0; i < 8; i += 1) {
+      const x = curve(x1, x2, s) - t;
+      const u = 1 - s;
+      const dx = 3 * u * u * x1 + 6 * u * s * (x2 - x1) + 3 * s * s * (1 - x2);
+      if (Math.abs(x) < 1e-5 || Math.abs(dx) < 1e-6) break;
+      s = Math.min(1, Math.max(0, s - x / dx));
+    }
+    return curve(y1, y2, s);
+  }
+  const phase = (e, delay, dur) => Math.min(1, Math.max(0, (e - delay) / dur));
+  const ease = (t) => bezier(0.2, 0.8, 0.2, 1.0, t);
+
+  // logo.rs: the arriving blocks [x, y, w, h, opacity, streak x, streak y, streak h] and the arrow rows.
+  const ARRIVE = [[183, 72, 44, 44, 0.9, 201, 14, 50], [234, 94, 44, 44, 0.9, 252, 58, 28], [285, 54, 44, 44, 0.9, 303, -22, 68]];
+  const ROWS = [[163, [183, 234, 285], '#45E0B0'], [214, [183, 234, 285], '#20C997'],
+    [265, [81, 132, 183, 234, 285, 336, 387], '#12B886'], [316, [132, 183, 234, 285, 336], '#0CA678'],
+    [367, [183, 234, 285], '#099268'], [418, [234], '#087F5B']];
+
+  // Live::at: the blocks fall in, hold, slide into the arrow, and a wave runs down it.
+  function live(t) {
+    const c = ((t % LOOP) + LOOP) % LOOP;
+    const drops = [0, 1, 2].map((i) => bezier(0.2, 0.9, 0.25, 1.12, phase(c, i * 0.12, 0.64)));
+    const w = (c - 1.75) / (LOOP - 1.75);
+    return { drops, leave: phase(c, 1.55, 0.4), wave: w >= 0 && w <= 1 ? w : null };
+  }
+
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const mix = (a, b, k) => { const x = rgb(a), y = rgb(b); return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * k)).join(',')})`; };
+
+  function drawMark(x, y, size, l) {
+    const k = size / 512;
+    const rr = (rx, ry, w, h, r, fill) => { ctx.beginPath(); ctx.roundRect(x + rx * k, y + ry * k, w * k, h * k, r * k); ctx.fillStyle = fill; ctx.fill(); };
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect(x + 16 * k, y + 16 * k, 480 * k, 480 * k, 120 * k);
+    ctx.fillStyle = '#0D1B1E'; ctx.fill();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(124, 245, 198, 0.2)'; ctx.stroke();
+    ctx.clip();
+    const leave = ease(l.leave);
+    ARRIVE.forEach(([bx, by, bw, bh, o, sx, sy, sh], i) => {
+      const t = Math.min(1.2, Math.max(0, l.drops[i]));
+      if (t <= 0 || leave >= 1) return;
+      const dy = -220 * (1 - t) + 100 * leave;
+      ctx.globalAlpha = Math.min(1, t / 0.4) * (1 - leave);
+      rr(sx, sy + dy, 8, sh, 4, 'rgba(124, 245, 198, 0.45)');
+      rr(bx, by + dy, bw, bh, 8, `rgba(124, 245, 198, ${o})`);
+      ctx.globalAlpha = 1;
+    });
+    const waveY = l.wave === null ? null : 110 + l.wave * 420;
+    for (const [ry, xs, c] of ROWS) {
+      const lit = waveY === null ? 0 : Math.exp(-(((ry + 22 - waveY) / 40) ** 2));
+      for (const rx of xs) rr(rx, ry + 6 * lit, 44, 44, 8, mix(c, '#7CF5C6', 0.6 * lit));
+    }
+    ctx.restore();
+  }
+
+  // Light streaks across the background: [top share, length, start (s), travel time (s), thickness, alpha].
+  // Each crosses once per 5.2 s loop, so the loop has no seam; the tops keep clear of the lines of text.
+  const STREAKS = [
+    [0.04, 260, 0.0, 1.6, 1.5, 0.75], [0.26, 140, 0.9, 1.3, 1, 0.6], [0.9, 380, 2.1, 1.9, 2, 0.7],
+    [0.29, 120, 3.4, 1.2, 1, 0.55], [0.745, 320, 1.4, 1.8, 1.5, 0.65], [0.94, 180, 4.1, 1.4, 2, 0.6],
+    [0.09, 420, 2.8, 2.0, 1.5, 0.7], [0.97, 110, 0.4, 1.1, 1, 0.55], [0.755, 280, 3.9, 1.7, 1.5, 0.65],
+    [0.02, 200, 4.6, 1.5, 1, 0.5],
+  ];
+
+  function glow(x, y, rx, ry, color, alpha) {
+    ctx.save();
+    ctx.translate(x, y); ctx.scale(1, ry / rx);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+    g.addColorStop(0, `rgba(${color}, ${alpha})`); g.addColorStop(1, `rgba(${color}, 0)`);
+    ctx.fillStyle = g; ctx.fillRect(-rx, -rx, rx * 2, rx * 2);
+    ctx.restore();
+  }
+
+  window.render = (t) => {
+    t = ((t % CYCLE) + CYCLE) % CYCLE;
+    const a = (t / CYCLE) * Math.PI * 2;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0d1b1e'; ctx.fillRect(0, 0, W, H);
+
+    // The setup's two glows. They stay still: the streaks carry the movement, and a still background keeps the
+    // GIF small (only the changed parts of each frame are stored).
+    glow(180, 30, 700, 280, '32, 201, 151', 0.2);
+    glow(850, 180, 500, 220, '12, 166, 120', 0.12);
+
+    // A fading dot grid, brighter on the left.
+    for (let gx = 11; gx < W; gx += 22) {
+      const fade = 0.09 * (1 - 0.7 * (gx / W));
+      ctx.fillStyle = `rgba(124, 245, 198, ${fade})`;
+      for (let gy = 11; gy < H; gy += 22) ctx.fillRect(gx - 0.5, gy - 0.5, 1, 1);
+    }
+
+    for (const [top, len, start, dur, thick, alpha] of STREAKS) {
+      const p = (((t - start) % CYCLE) + CYCLE) % CYCLE / dur;
+      if (p > 1) continue;
+      const head = -len + p * (W + len * 2);
+      const g = ctx.createLinearGradient(head - len, 0, head, 0);
+      g.addColorStop(0, 'rgba(124, 245, 198, 0)');
+      g.addColorStop(1, `rgba(124, 245, 198, ${alpha})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(head - len, top * H, len, thick);
+    }
+
+    // The mark's breathing glow (welcome.rs: radius +8 %, strength -20 % at the peak), then the mark.
+    const breathe = (1 - Math.cos(a)) / 2;
+    const radius = 180 * (1 + 0.08 * breathe);
+    glow(LOGO.cx, LOGO.cy, radius, radius, '32, 201, 151', 0.32 * (1 - 0.2 * breathe));
+    drawMark(LOGO.cx - LOGO.size / 2, LOGO.cy - LOGO.size / 2, LOGO.size, live(t));
+
+    document.getElementById('dot').style.opacity = String(0.5 + 0.5 * Math.abs(Math.cos(a * 2)));
+  };
+
+  // Plays by itself unless record.mjs drives it (it sets ?still).
+  if (!location.search.includes('still')) {
+    const t0 = performance.now();
+    const loop = (now) => { render((now - t0) / 1000); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  } else {
+    render(0);
+  }
+</script>
+</body>
+</html>

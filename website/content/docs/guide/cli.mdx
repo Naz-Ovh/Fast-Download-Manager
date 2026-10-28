@@ -7,8 +7,8 @@ description: Download, resume and merge files from a terminal with the fdm comma
 checking a link quickly.
 
 <Callout title="Where to find it">
-  From a source build: `cargo build --release -p fdm-cli` writes `target/release/fdm` (`fdm.exe` on Windows).
-  The Windows installer, coming soon, puts `fdm.exe` in the install folder.
+  Setup installs `fdm` with the app and puts it on your PATH (on Windows when the command line is selected),
+  so it runs in any terminal.
 </Callout>
 
 ## Download a file: `fdm get`
@@ -32,8 +32,6 @@ Every second it prints the percentage, size, speed and how many connections are 
 - **Ctrl+C** stops the download and saves which chunks are done.
 - **Run the same command again** to resume. It prints `resuming: ...` and fetches only what is missing.
 - The progress is kept in a `.fdm-temp` folder inside the save folder until the file is complete.
-
-From the repository you can also run `just get <url> [save-dir] [connections]`.
 
 ### See what the connections do
 

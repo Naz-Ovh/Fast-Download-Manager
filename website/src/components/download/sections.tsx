@@ -165,7 +165,7 @@ export function VerifySection() {
             </a>
           )}
           <Link href={GUIDE.install} className="dl-pill-link">
-            <Hammer aria-hidden /> Build from source
+            <Hammer aria-hidden /> Install guide
           </Link>
         </div>
       </Reveal>
