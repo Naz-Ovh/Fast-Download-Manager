@@ -12,8 +12,8 @@
     "start": "serve out",
     "precheck": "node scripts/prebuild/index.mjs && node scripts/route-tree.mjs",
     "check": "tsc --noEmit",
-    "cf:deploy": "pnpm build && pnpm dlx wrangler@4 deploy",
-    "cf:dry-run": "pnpm dlx wrangler@4 deploy --dry-run"
+    "cf:deploy": "pnpm build && pnpm dlx --allow-build=esbuild --allow-build=workerd wrangler@4 deploy",
+    "cf:dry-run": "pnpm dlx --allow-build=esbuild --allow-build=workerd wrangler@4 deploy --dry-run"
   },
   "dependencies": {
     "@tanstack/react-router": "1.170.46",

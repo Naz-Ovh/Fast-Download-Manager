@@ -47,3 +47,5 @@ site-dry-run:
 [working-directory: 'website']
 site-deploy:
     pnpm cf:deploy
+
+alias deploy := site-deploy

@@ -74,7 +74,9 @@ site answers only on its domain.
 
 Wrangler is **not** a dependency: the scripts run it with `pnpm dlx wrangler@4` (latest 4.x, fetched into
 pnpm's store, the lockfile untouched; it pulls Cloudflare's `workerd` binary, about 35 MB on Windows). Making
-it a devDependency needs the owner's yes.
+it a devDependency needs the owner's yes. pnpm runs no install scripts it was not told to, and would stop to ask
+about Wrangler's two (`esbuild` checks its binary, `workerd` fetches its own), so the scripts pass
+`--allow-build=esbuild --allow-build=workerd` and the deploy runs without a prompt.
 
 ```sh
 pnpm cf:dry-run    # validate wrangler.jsonc and read out/ (no login, creates nothing); run pnpm build first
